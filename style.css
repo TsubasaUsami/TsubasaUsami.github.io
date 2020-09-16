@@ -6,3 +6,9 @@
 td svg {
     cursor: pointer;
 }
+
+.table-responsive th,
+.table-responsive td
+{
+    white-space: nowrap;
+}
