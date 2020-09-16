@@ -4,14 +4,23 @@ localStorage.removeItem('dataList');
 const startDay = getWeekOfDay(2020, 9, 1, 1);
 let events = [
     {
-        title: 'All Day Event',
+        title: '燃えるゴミ',
         rrule: {
-            freq: 'daily',
-            byweekday: [],
+            freq: 'weekly',
+            byweekday: ['mo'],
             dtstart: startDay,
             interval: 1,
         }
-    }
+    },
+    {
+        title: '燃えないゴミ',
+        rrule: {
+            freq: 'weekly',
+            byweekday: ['mo'],
+            dtstart: startDay,
+            interval: 1,
+        }
+    },
 ]; 
 localStorage.setItem('dataList', JSON.stringify(events));
 const dataList = JSON.parse(localStorage.getItem('dataList'));
@@ -22,13 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
         initialView: 'dayGridMonth',
         locale: 'ja',
         headerToolbar: {
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            start: 'title',
+            end: ''
+        },
+        footerToolbar: {
+            right: 'dayGridMonth,timeGridWeek,listMonth'
         },
         events: dataList,
         dayCellContent: (dayCellContentInfo) => {
             dayCellContentInfo.dayNumberText = dayCellContentInfo.dayNumberText.replace('日', '');
             console.log(dayCellContentInfo);
-        }
+        },
+        hiddenDays: [0, 6]
     });
     calendar.render();
 });
@@ -57,10 +71,10 @@ function getWeekOfDay(year, month, week, day) {
 	// 4・結果
 	const result = new Date(year+'/'+month+'/'+day);
 
-	const Y = parseInt(result.getFullYear());
-    let m = parseInt(result.getMonth())+1;
+	const Y = result.getFullYear();
+    let m = result.getMonth()+1;
     m = ('0' + m).slice(-2)
-    let d = parseInt(result.getDate());
+    let d = result.getDate();
     d = ('0' + d).slice(-2)
 
 	return Y+'-'+m+'-'+d;
