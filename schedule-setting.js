@@ -3,6 +3,11 @@
 const startDay = getWeekOfDay(2020, 9, 5, 0);
 console.log(startDay);
 
+// DOM構築後の初期処理
+$(document).ready(() => {
+    //何かしらの処理
+});
+
 /**
  * @param year 求めたい日付の年を指定
  * @param month 求めたい日付の月を指定
