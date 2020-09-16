@@ -1,6 +1,6 @@
 'use strict';
 
-const startDay = getWeekOfDay(2020, 9, 5, 0);
+const startDay = getWeekOfDay(2020, 9, 1, 0);
 console.log(startDay);
 
 // DOM構築後の初期処理
