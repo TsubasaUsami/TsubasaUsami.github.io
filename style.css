@@ -2,3 +2,7 @@
     height: 35px;
     width: 35px;
 }
+
+td svg {
+    cursor: pointer;
+}
