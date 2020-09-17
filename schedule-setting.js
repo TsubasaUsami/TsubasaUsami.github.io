@@ -2,6 +2,18 @@
 
 const startDay = getWeekOfDay(2020, 9, 1, 0);
 console.log(startDay);
+let event = {
+    title: '燃えないゴミ',
+    rrule: {
+        freq: 'weekly',
+        byweekday: ['mo'],
+        dtstart: startDay,
+        interval: 1,
+    },
+    className: [
+        'event-danger'
+    ]
+}
 
 // DOM構築後の初期処理
 $(document).ready(() => {

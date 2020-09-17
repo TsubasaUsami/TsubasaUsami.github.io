@@ -12,3 +12,34 @@ td svg {
 {
     white-space: nowrap;
 }
+
+.event-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.event-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.event-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.event-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529 !important;
+}
+
+.event-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.event-dark {
+    background-color: #343a40;
+    border-color: #343a40;
+}

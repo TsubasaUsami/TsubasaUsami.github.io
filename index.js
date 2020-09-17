@@ -19,13 +19,18 @@ let events = [
             byweekday: ['mo'],
             dtstart: startDay,
             interval: 1,
-        }
+        },
+        className: [
+            'event-danger'
+        ]
     },
 ]; 
 localStorage.setItem('dataList', JSON.stringify(events));
 const dataList = JSON.parse(localStorage.getItem('dataList'));
-// FullCalendarの設定
-document.addEventListener('DOMContentLoaded', () => {
+
+// DOM構築後の初期処理
+$(document).ready(() => {
+    // FullCalendarの設定
     let calendarEl = document.getElementById('calendar');
     let calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -40,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         events: dataList,
         dayCellContent: (dayCellContentInfo) => {
             dayCellContentInfo.dayNumberText = dayCellContentInfo.dayNumberText.replace('日', '');
-            console.log(dayCellContentInfo);
         },
         hiddenDays: [0, 6]
     });
