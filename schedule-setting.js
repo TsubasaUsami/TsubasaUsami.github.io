@@ -1,20 +1,5 @@
 'use strict';
 
-const startDay = getWeekOfDay(2020, 9, 1, 0);
-console.log(startDay);
-let event = {
-    title: '燃えないゴミ',
-    rrule: {
-        freq: 'weekly',
-        byweekday: ['mo'],
-        dtstart: startDay,
-        interval: 1,
-    },
-    className: [
-        'event-danger'
-    ]
-}
-
 // DOM構築後の初期処理
 $(document).ready(() => {
     //何かしらの処理
@@ -48,11 +33,83 @@ function getWeekOfDay(year, month, week, day) {
         return false;
     }
 
-	const Y = result.getFullYear();
+	const y = result.getFullYear();
     let m = result.getMonth()+1;
     m = ('0' + m).slice(-2)
     let d = result.getDate();
     d = ('0' + d).slice(-2)
 
-	return Y+'-'+m+'-'+d;
+	return y + '-' + m + '-' + d;
+}
+
+/**
+ *
+ * 追加ボタンクリック時イベント
+ */
+function onClickAddSchedule() {
+    const periodVal = $('#period').val();
+    const weekNumberVal = $('#week-number').val();
+    const weekOfDayVal = $('#week-of-day').val();
+    const typeOfGarbageVal = $('#type-of-garbage').val();
+    const colorVal = $('#color').val();
+    const currentMonth = new Date().getMonth() + 1;
+    let eventList = []; 
+    let eventObj = {
+        title: '',
+        rrule: {
+            freq: '',
+            byweekday: [],
+            dtstart: null,
+            interval: 1,
+        },
+        className: []
+    }
+
+    // ごみの種類が未入力の場合は、エラーメッセージを表示
+    if (!typeOfGarbageVal) {
+        alert('ゴミの種類を入力してください。');
+    }
+
+    // 格納されているスケジュール追加月と、現在の月が異なる場合はイベントリストを削除する
+    if (Number(localStorage.getItem('currentMonth')) !== currentMonth) {
+        localStorage.removeItem('dataList');
+    }
+    // 追加日の当月をローカルストレージに格納
+    localStorage.setItem('currentMonth', currentMonth);
+    
+    eventObj.title = typeOfGarbageVal;
+    eventObj.className.push(colorVal);
+    eventObj.rrule.byweekday.push(weekOfDayVal);
+    console.log(periodVal);
+
+    switch(periodVal) {
+        case '0':
+            eventObj.rrule.freq = 'weekly';
+            // 本日を作成.
+            let date = new Date();
+            // 日付に1を設定します.
+            date.setDate(1);
+            const year = date.getFullYear()
+            let month = date.getMonth() + 1;
+            month = ('0' + month).slice(-2)
+            let day = date.getDate();
+            day = ('0' + day).slice(-2)
+            const dtstart = year + '-' + month + '-' + day;
+            eventObj.rrule.dtstart = dtstart;
+        break;
+    }
+
+    // if (periodVal === 'monthly') {
+    //     
+    //     const startDay = getWeekOfDay(2020, currentMonth, Number(weekNumberVal), Number(weekOfDayVal));
+    // }
+    console.log(eventObj);
+    const dataList = JSON.parse(localStorage.getItem('dataList'));
+    if (!dataList) {
+        eventList.push(eventObj);
+        localStorage.setItem('dataList', JSON.stringify(eventList));
+    } else {
+        dataList.push(eventObj);
+        localStorage.setItem('dataList', JSON.stringify(dataList));
+    }
 }
