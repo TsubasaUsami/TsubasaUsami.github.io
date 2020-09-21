@@ -62,7 +62,7 @@
                             <label for="period" class="col-form-label">周期</label>
                         </div>
                         <div class="col-9">
-                            <select id="period" class="form-control">
+                            <select id="period" class="form-control" onchange="notDisable()">
                                 <option selected value="0">毎週</option>
                                 <option value="1">隔週（奇数週）</option>
                                 <option value="2">隔週（偶数週）</option>
@@ -90,11 +90,11 @@
                         </div>
                         <div class="col-9">
                             <select id="week-of-day" class="form-control">
-                                <option selected value="mo">月</option>
-                                <option value="tu">火</option>
-                                <option value="we">水</option>
-                                <option value="th">木</option>
-                                <option value="fr">金</option>
+                                <option selected value="MO">月</option>
+                                <option value="TU">火</option>
+                                <option value="WE">水</option>
+                                <option value="TH">木</option>
+                                <option value="FR">金</option>
                             </select>
                         </div>
                     </div>
@@ -148,8 +148,8 @@
                                 <th scope="col">ゴミの種類</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
+                        <tbody id="dataListTable">
+                            <!-- <tr>
                                 <td>
                                     <svg class="text-danger" width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg" onclick="confirm('削除します。よろしいですか？')">
                                         <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
@@ -181,7 +181,7 @@
                                 <td>第３</td>
                                 <td>木曜日</td>
                                 <td>古紙</td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>
