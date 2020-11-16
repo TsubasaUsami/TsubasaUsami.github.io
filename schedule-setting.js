@@ -75,6 +75,7 @@ function onClickAddSchedule() {
     const month = new Date().getMonth() + 1;
     let eventList = [];
     let eventObj = {
+        id: '',
         title: '',
         rrule: {
             freq: '',
@@ -82,10 +83,10 @@ function onClickAddSchedule() {
             dtstart: null,
             until: createEndDate(),
             interval: 1,
-            scheduleDiv: '',
-            weekNumber: '',
         },
-        className: []
+        className: [],
+        scheduleDiv: '',
+        weekNumber: '',
     }
 
     // ごみの種類が未入力の場合は、エラーメッセージを表示
@@ -100,6 +101,9 @@ function onClickAddSchedule() {
     }
     // 追加日の当月をローカルストレージに格納
     localStorage.setItem('currentMonth', currentMonth);
+
+    // IDの生成
+    eventObj.id = Math.random().toString(32).substring(2);
 
     eventObj.title = typeOfGarbageVal;
     eventObj.className.push(colorVal);
@@ -117,7 +121,7 @@ function onClickAddSchedule() {
             eventObj.rrule.dtstart = getWeekOfDay(year, month, 1, weekOfDayVal);
             eventObj.rrule.interval = 2;
             eventObj.rrule.byweekday.push(weekOfDayVal);
-            eventObj.rrule.scheduleDiv = 'odd';
+            eventObj.scheduleDiv = 'odd';
             break;
 
         case '2':
@@ -125,13 +129,13 @@ function onClickAddSchedule() {
             eventObj.rrule.dtstart = getWeekOfDay(year, month, 2, weekOfDayVal);
             eventObj.rrule.interval = 2;
             eventObj.rrule.byweekday.push(weekOfDayVal);
-            eventObj.rrule.scheduleDiv = 'even';
+            eventObj.scheduleDiv = 'even';
             break;
 
         case '3':
             eventObj.rrule.freq = 'monthly';
             eventObj.rrule.byweekday.push(rrule.RRule[weekOfDayVal].nth(Number(weekNumberVal)));
-            eventObj.rrule.weekNumber = weekNumberVal;
+            eventObj.weekNumber = weekNumberVal;
             break;
     }
 
@@ -167,7 +171,7 @@ function createEndDate() {
     // 本日を作成.
     let date = new Date();
     const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-    
+
     const year = endDate.getFullYear()
     let month = endDate.getMonth() + 1;
     month = ('0' + month).slice(-2)
@@ -178,6 +182,10 @@ function createEndDate() {
     return dtend;
 }
 
+/**
+ * ごみ捨てスケジュール一覧の作成
+ *
+ */
 function createDataListTable() {
     const dataList = JSON.parse(localStorage.getItem('dataList'));
     let dataListTable = $('#dataListtable');
@@ -188,24 +196,24 @@ function createDataListTable() {
         for (const item of dataList) {
             rowInnerHtml += '<tr>/n';
             // 削除アイコン
-            rowInnerHtml += '<td><svg class="text-danger" width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg" onclick="confirm(\'削除します。よろしいですか？\')"><path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/></svg></td>\n';
+            rowInnerHtml += `<td><svg class="text-danger" width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg" onclick="deleteSchedule('${item.id}')"><path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/></svg></td>\n`;
 
             // 周期
             if (item.rrule.freq === 'weekly' && item.rrule.interval === 1) {
                 rowInnerHtml += '<td>毎週</td>\n';
-            } else if (item.rrule.freq === 'weekly' && item.rrule.interval === 2 && item.rrule.scheduleDiv === 'odd') {
+            } else if (item.rrule.freq === 'weekly' && item.rrule.interval === 2 && item.scheduleDiv === 'odd') {
                 rowInnerHtml += '<td>隔週（奇数）</td>\n';
-            } else if (item.rrule.freq === 'weekly' && item.rrule.interval === 2 && item.rrule.scheduleDiv === 'even') {
+            } else if (item.rrule.freq === 'weekly' && item.rrule.interval === 2 && item.scheduleDiv === 'even') {
                 rowInnerHtml += '<td>隔週（偶数）</td>\n';
             } else if (item.rrule.freq === 'monthly') {
                 rowInnerHtml += '<td>毎月</td>\n';
             } else {
                 rowInnerHtml += '<td></td>\n';
             }
-            
+
             // 週番号
-            if (item.rrule.weekNumber) {
-                switch (item.rrule.weekNumber) {
+            if (item.weekNumber) {
+                switch (item.weekNumber) {
                     case '1':
                         rowInnerHtml += '<td>第1</td>\n';
                         break;
@@ -245,7 +253,7 @@ function createDataListTable() {
                         rowInnerHtml += '<td>金曜</td>\n';
                         break;
                 }
-            }else if (item.rrule.byweekday[0]) {
+            } else if (item.rrule.byweekday[0]) {
                 switch (item.rrule.byweekday[0]) {
                     case 'MO':
                         rowInnerHtml += '<td>月曜</td>\n';
@@ -272,5 +280,21 @@ function createDataListTable() {
         }
 
         $("#dataListTable").append(rowInnerHtml);
+    }
+
+}
+
+/**
+ * @param id 削除するデータのID
+ */
+function deleteSchedule(id) {
+    const result = confirm('削除します。よろしいですか？');
+    if (result) {
+        let dataList = JSON.parse(localStorage.getItem('dataList'))
+        dataList = dataList.filter(x => x.id !== id);
+
+        localStorage.setItem('dataList', JSON.stringify(dataList));
+
+        createDataListTable();
     }
 }
